@@ -1,1 +1,7 @@
 name: Deploying Docker image on EC2 istances.
+
+on:
+   workflow_dispatch:
+
+jobs:
+   
