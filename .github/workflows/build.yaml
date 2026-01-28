@@ -1,4 +1,4 @@
-name: Deploying Docker image on EC2 istances.
+name: Deploy Docker image on EC2 istances.
 
 on:
    workflow_dispatch:
@@ -19,13 +19,13 @@ jobs:
 
       - name: Set an version tag.
         id: version
-        run: echo "TAG=v${{ github.sha }}"
+        run: echo "TAG=v${{ github.run_number }}" >> $GITHUB_ENV
 
-      - name: Build & Push to Docker Registry.
+      - name: Build & Push to Docker Registry
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: True
-          tags: 
+          push: true
+          tags: |
             aniketjok/fashion:${{ env.TAG }}
-            
+            aniketjok/fashion:latest
