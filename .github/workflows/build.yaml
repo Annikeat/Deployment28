@@ -1,4 +1,4 @@
-name: Deploy Docker image on EC2 instances
+name: Deploy Docker image on EC2 instance
 
 on:
   workflow_dispatch:
@@ -29,17 +29,17 @@ jobs:
             aniketjok/fashion:${{ env.TAG }}
             aniketjok/fashion:latest
 
-  Deploy:
+  deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Deploy on EC2 instances.
+      - name: Deploy on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host:  ${{ secrets.EC2_HOST }}
+          host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.EC2_SSHKEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             docker pull aniketjok/fashion:latest
             docker stop fashion || true
