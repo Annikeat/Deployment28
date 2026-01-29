@@ -43,8 +43,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull aniketjok/fashion:latest
-            docker stop fashion || true
-            docker rm fashion || true
-            docker run -d -p 80:80 --name fashion aniketjok/fashion:latest          
+            sudo docker pull aniketjok/fashion:latest
+            sudo docker stop fashion || true
+            sudo docker rm fashion || true
+            sudo docker run -d -p 80:80 --name fashion aniketjok/fashion:latest          
           
