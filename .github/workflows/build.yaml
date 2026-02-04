@@ -46,5 +46,7 @@ jobs:
             sudo docker pull aniketjok/fashion:latest
             sudo docker stop fashion || true
             sudo docker rm fashion || true
-            sudo docker run -d -p 80:80 --name fashion aniketjok/fashion:latest          
+            sudo docker run -d -p 80:80 --name fashion aniketjok/fashion:latest
+            # sudo docker image prune -a --filter "until=24h" -f
+
           
