@@ -4,11 +4,14 @@ on:
   push:
     branches:
       - main
-
+      
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    outputs:
+      image_tag: ${{ steps.set_tag.outputs.tag }}
+      
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -20,16 +23,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Set version tag
-        run: echo "TAG=v${{ github.run_number }}" >> $GITHUB_ENV
+        id: set_tag
+        run: echo "tag=v${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       - name: Build & Push to Docker Registry
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
+          push: false
           tags: |
-            aniketjok/fashion:${{ env.TAG }}
-            aniketjok/fashion:latest
+            aniketjok/fashion:${{ steps.set_tag.outputs.tag }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,10 +46,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker pull aniketjok/fashion:latest
+            sudo docker pull aniketjok/fashion:${{ needs.build.outputs.image_tag }}
             sudo docker stop fashion || true
             sudo docker rm fashion || true
-            sudo docker run -d -p 80:80 --name fashion aniketjok/fashion:latest
+            sudo docker run -d -p 80:80 --name fashion aniketjok/fashion:${{needs.build.outputs.image_tag}}
             # sudo docker image prune -a --filter "until=24h" -f
 
           
